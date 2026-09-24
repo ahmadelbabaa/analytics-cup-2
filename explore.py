@@ -21,12 +21,12 @@ def load_events():
 
 
 def load_tracking(match_id):
-    with open(DATA / f"matches/{match_id}/{match_id}_tracking_extrapolated.jsonl") as f:
+    with open(DATA / f"matches/{match_id}/{match_id}_tracking_extrapolated.jsonl", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
 
 def main():
-    matches = pd.json_normalize(json.load(open(DATA / "matches.json")))
+    matches = pd.json_normalize(json.load(open(DATA / "matches.json", encoding="utf-8")))
     print(f"{len(matches)} matches")
     print(pd.concat([matches["home_team.short_name"], matches["away_team.short_name"]]).value_counts().to_string())
 
