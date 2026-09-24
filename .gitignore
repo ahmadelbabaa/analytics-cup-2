@@ -10,3 +10,6 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 .env
+
+# graphify knowledge graph (local tooling)
+graphify-out/
