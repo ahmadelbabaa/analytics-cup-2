@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-DATA = Path(__file__).parent / "data" / "skillcorner" / "data"
+DATA = Path(__file__).parent.parent / "data" / "skillcorner" / "data"
 DEATH_MARGIN = 3     # frames: option must end at least 0.3 s before the possession ends to count as a death
 CLOSE_M = 1.0        # ponytail: crude cause rule, nearest defender moved >=1 m closer to the lane -> "defender closed"
 
@@ -104,7 +104,7 @@ def main():
     print(c.groupby("died").d_lane.describe()[["count", "mean", "25%", "50%", "75%"]].round(2))
     print("\ndeaths per match (clean, defender-closed):")
     print(deaths[closed].groupby("match_id").size().describe().round(1).to_dict())
-    df.to_csv(Path(__file__).parent / "data" / "kill_test_options.csv", index=False)
+    df.to_csv(Path(__file__).parent.parent / "data" / "kill_test_options.csv", index=False)
 
 
 if __name__ == "__main__":
