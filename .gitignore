@@ -1,0 +1,12 @@
+# Competition data must not be committed
+data/
+*.parquet
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+.env
