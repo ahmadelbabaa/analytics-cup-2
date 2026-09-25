@@ -1,10 +1,10 @@
 # Who should have picked him up?
 
-**An optimisation tool for defensive marking responsibility.** PySport Analytics Cup 2.0, Football, Europe edition. Deadline **18 Dec 2026**.
+**Auditing defensive marking responsibility over time.** PySport Analytics Cup 2.0, Football, Europe edition. Deadline **18 Dec 2026**.
 
 ## The idea in one paragraph
 
-Coaches review goals and chances asking the same question: *who should have picked him up?* We answer it objectively, for any moment of any match. We solve "who is responsible for whom" as an **optimisation problem** (an assignment problem over time) under a **marking philosophy the coach chooses**, from zonal to man-oriented. We then compare that with what the defenders actually did. The tool shows:
+Coaches review goals and chances asking the same question: *who should have picked him up?* We answer it objectively, for any moment of any match. Marking responsibility has no ground-truth labels, so it cannot be learned from data. It has to be **defined**, and a coach's **marking philosophy** (zonal to man-oriented) is that definition. We turn the philosophy into an assignment problem over time and **audit what the defenders actually did** against it. The tool shows:
 
 1. who should be responsible for each attacker, frame by frame;
 2. **responsibility gaps**: dangerous attackers nobody is covering in time;
@@ -15,10 +15,21 @@ Coaches review goals and chances asking the same question: *who should have pick
 | Criterion | How we meet it |
 |---|---|
 | Relevance | Answers a question every defensive coach asks in video review. Gives advice ("B should have taken him 0.8 s earlier"), not an average. |
-| Methodology | 20 matches is too little to *learn* marking from data. Optimisation needs no training data, is interpretable, and is controlled by the coach's philosophy. Checked with worked examples plus population checks. |
-| Originality | Cup 1's winner optimised defenders' **positions** for pitch control. We optimise **responsibility over time**: who marks whom, and when marking passes on. Handover timing and responsibility gaps are new. |
-| Communication | One three-panel figure (actual → ideal responsibility → gaps and late handover) and a Streamlit app with a zonal↔man dial for the live final. |
+| Methodology | Marking responsibility has no labels, so it cannot be learned. It must be defined, and the coach's philosophy is the definition. Solved as an assignment problem over time: interpretable, no training data. Checked with worked examples plus population checks. |
+| Originality | Responsibility **over time**: who marks whom, when marking should change hands, and the gaps when it doesn't. A **diagnosis** of what actually happened (video review), not a hypothetical better shape. |
+| Communication | One **timeline** figure: responsibility lines changing hands over a sequence, ideal vs actual handover moment, and the gap in between. |
 | Open-source | A small package with a clean API, built on kloppy and databallpy where possible. The grant path is a module or PR there. |
+
+### Staying clearly distinct from the Cup 1 winner (Shah 2026, positional optimisation)
+
+We borrow his good practice (a coaching question, a coach-controlled model, one strong figure, runs out of the box), **not his concept or look**:
+
+- **Lead with the coaching question, never the method.** The title and first line are "Who should have picked him up?". The method is one Methods line, called an *assignment problem*; don't brand it "optimisation".
+- **Time is our visual signature.** No before/after triptych of frozen positions. The main figure is a timeline of responsibility changing hands.
+- **Diagnosis over prescription.** He shows where players should stand. We audit what happened in real matches: gaps and late handovers, for video review.
+- **Our own methodology argument.** "No ground-truth labels for responsibility, so it must be defined by a philosophy", not "too little data for ML".
+- **Cite him as complementary.** One line in the README: "Shah (2026) optimises where defenders should stand; we ask who is responsible for whom, and when that should change hands."
+- **Streamlit app is optional**, a presentation aid for the final, not the centrepiece of the submission.
 
 **Constraints we keep:** no team comparisons or rankings (Auckland is in 7 of 20 matches). Only players detected on camera in headline numbers. Every example is checked frame by frame before use; see the "sloppy handover" lesson below.
 
@@ -55,7 +66,7 @@ Coaches review goals and chances asking the same question: *who should have pick
 
 ## Phase 0: reset the repo (week of 28 Sep)
 - [ ] Move `kill_tests/` and the current `analysis/` scripts under `analysis/appendix/`; they're background evidence, not the product
-- [ ] Rewrite the README top section to the new question; keep the old plan out of it
+- [ ] Rewrite the README top section to the new question; keep the old plan out of it; no "optimisation" branding in title or abstract
 - [ ] Decide on kloppy + databallpy as the data layer (loading, velocities); check they read the 2024/25 open data
 - [ ] Load data straight from SkillCorner's GitHub URLs with a local cache, so the repo runs with no manual clone
 - [ ] Add `pyproject.toml` so `pip install -e .` works; pin dependencies
@@ -83,19 +94,21 @@ Coaches review goals and chances asking the same question: *who should have pick
 - [ ] Situational breakdown (distance to ball, third, block type, transition vs settled). Situations only, no teams
 
 ## Phase 4: communication (weeks 8–9)
-- [ ] Figure 1: three panels, actual → ideal responsibility → gaps and late handover (extend `plot_handovers.py` style, colour-blind-safe palette)
+- [ ] Figure 1: **timeline**, not a before/after triptych. Responsibility lines changing hands over one sequence, ideal vs actual handover moment marked, gap shaded (pitch inset allowed; colour-blind-safe palette)
 - [ ] Optional figure/table 2: one small robustness or situational table (the 2-figure limit)
 - [ ] `submission.ipynb`: the story, runnable top to bottom from a clean environment
-- [ ] Streamlit `app.py`: pick match and moment, set the philosophy dials, see responsibilities, gaps and handover timing
+- [ ] *(Optional, only if time allows)* Streamlit `app.py` for the live final: pick match and moment, set the philosophy dials, see responsibilities, gaps and handover timing
 
 ## Phase 5: submission (weeks 10–11, before 18 Dec)
 - [ ] README ≤1000 words: Abstract / Introduction / Methods / Results / Conclusion; at most 2 figures/tables; reproduction steps
+- [ ] README cites Shah (2026) in one line as complementary work (where to stand vs who is responsible, and when)
+- [ ] Distinctness check before submitting: read the README next to the Cup 1 winner's; no shared title words, figure style or methodology sentence
 - [ ] Clean-environment test: fresh venv, `pip install`, run the notebook and tests
-- [ ] 1-minute YouTube pitch (script: the coach's question → the dial → one example → "use it on your own matches")
+- [ ] 1-minute YouTube pitch (script: the coach's question → one real sequence where the handover came late → the philosophy dial → "audit your own matches")
 - [ ] `LICENSE.md` present; no data in repo; final check against the rules
 - [ ] Submit at submissions.analytics-cup.org
 
 ## Open questions
 - [ ] Threat model: xT grid (which one, licence?) or a simple goal distance/angle?
 - [ ] Can SkillCorner's dynamic events (dangerous passing options, off-ball runs) be the "dangerous event" outcome without circularity?
-- [ ] How close to the Cup 1 winner is too close? Keep "responsibility over time" front and centre everywhere
+- [x] ~~How close to the Cup 1 winner is too close?~~ Settled: same theme and good practice, different concept. See "Staying clearly distinct" above
